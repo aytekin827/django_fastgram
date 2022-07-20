@@ -1,5 +1,7 @@
 from django.http import JsonResponse
 from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 
 class BaseView(View):
@@ -11,3 +13,12 @@ class BaseView(View):
             'message': message,
         }
         return JsonResponse(result, status)
+
+
+class UserCreateView(BaseView):
+    @method_decorator(csrf_exempt) 
+    # ajax로 post요청을 보낼때 csrf 보안 절차를 건너뛰기 위한 데코레이터
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request):
