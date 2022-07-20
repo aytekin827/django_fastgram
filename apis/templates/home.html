@@ -9,14 +9,15 @@ login page
 {{ request.user }}
     <input type="text", id="username">
     <input type="password", id="password">
-    <button type="submit" id="login-submit">submit</button>
+    <button type="submit" id="login">login</button>
+    <button type="submit" id="logout">logout</button>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
     </script>
 
     <script>
         $(document).ready(function () {
-            $('#login-submit').click(function() {
+            $('#login').click(function() {
                 $.post('/apis/v1/users/login/', {
                     'username': $('#username').val(),
                     'password': $('password').val(),
@@ -25,6 +26,15 @@ login page
                 }).fail(function(data) {
                     alert(data.responseJSON.message);
                 });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#logout').click(function() {
+                $.get('/apis/v1/users/logout/', {}, function() {
+                    location.reload();
+                })
             });
         });
     </script>
