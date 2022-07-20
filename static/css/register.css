@@ -1,0 +1,13 @@
+#login .container {
+    margin-top: 120px;
+    width: 200;
+    height: 400;
+    border: 2px solid #9c9c9c;
+}
+#login .container #login-row #login-column #login-box #login-form {
+    padding: 20px;
+    color: blue;
+}
+#login .container #login-row #login-column #login-box #login-form #register-link {
+    margin-top: -85px;
+}

@@ -24,7 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('apis/', include('apis.urls')),
     path('', HomeView.as_view(), name='contents_home'),
-    path('login/', TemplateView.as_view(template_name='login.html', name='login'))
+    path('login/', TemplateView.as_view(template_name='login.html'), name='login')
 ]
 
 if settings.DEBUG:
