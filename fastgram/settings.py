@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 INSTALLED_APPS += [
     'debug_toolbar',
     'apis',
+    'contents',
 ]
 
 MIDDLEWARE = [
@@ -57,10 +58,14 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'fastgram.urls'
 
+TEMPLATES_DIR = BASE_DIR / 'templates'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            TEMPLATES_DIR
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

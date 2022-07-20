@@ -1,1 +1,4 @@
 db.sqlite3
+apis/__pycache__
+apis/migrations/__pycache__
+fastgram/__pycache__/wsgi.cpython-310.pyc

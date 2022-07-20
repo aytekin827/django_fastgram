@@ -17,9 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 
+from contents.views import HomeView
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('apıs/', include('apis.urls')),
+    path('apis/', include('apis.urls')),
+    path('', HomeView.as_view(), name='contents_home'),
 ]
 
 if settings.DEBUG:
