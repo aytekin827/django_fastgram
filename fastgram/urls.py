@@ -1,34 +1,32 @@
-"""fastgram URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/4.0/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.views.generic import TemplateView
+from django.conf.urls.static import static
+from django.shortcuts import redirect
 
 from contents.views import HomeView
+
+
+class NonUserTemplateView(TemplateView):
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_anonymous:
+            print('로그인이 되어 홈페이지로 이동합니다')
+            return redirect('contents_home')
+        return super().dispatch(request, *args, **kwargs)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('apis/', include('apis.urls')),
     path('', HomeView.as_view(), name='contents_home'),
-    path('login/', TemplateView.as_view(template_name='login.html'), name='login')
+    path('login/', NonUserTemplateView.as_view(template_name='login.html'), name='login'),
+    path('register/', NonUserTemplateView.as_view(template_name='register.html'), name='register')
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if settings.DEBUG:
     import debug_toolbar
-    urlpatterns += [
-            path(r'^__debug__/', include(debug_toolbar.urls)),
-        ]
+    urlpatterns += [path('__debug__/', include(debug_toolbar.urls))]

@@ -1,35 +1,37 @@
 {% extends "_base.html" %}
-{% load static %}
+
 {% block header %}
-    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
+
+{% block title %}
+login page!
 {% endblock %}
 
 {% block contents %}
 {{ request.user }}
-
 <div id="login">
     <div class="container">
         <br>
-        <h3 class="text-center text-info">Login</h3>
+        <h3 class="text-center text-danger">Login</h3>
         <br>
         <div class="form-group col-md-6">
-            <label for="username" class="text-danger">Username:</label>
-            <br>
-            <input type="text", id="username" name="username" class="form-control">
+            <label for="username" class="text-danger">Username: </label><br>
+            <input type="text" name="username" id="username" class="form-control">
         </div>
         <div class="form-group col-md-6">
-            <label for="password" class="text-danger">Password:</label>
-            <br>
-            <input type="password", id="password" name="password" class="form-control">
+            <label for="password" class="text-danger">password: </label><br>
+            <input type="password" name="password" id="password" class="form-control">
         </div>
-        <div class="form-group col-md-6" id="login-row">
+        <div class="form-group col-md-6">
             <div class="row">
-                <input type="submit", id="login" class="form-control btn btn-danger" value="submit">
+                <input type="submit" id="loginbtn" class="form-control btn btn-danger" value="submit">
             </div>
         </div>
-        <div class="form-group col-md-6" id="login-row">
+        <div class="form-group col-md-6">
             <div class="row">
-                <a href="#" class="form-control btn btn-outline-danger">Register Here</a>
+                <a href="{% url 'register' %}" class="form-control btn btn-outline-danger">Register Here!</a>
             </div>
         </div>
     </div>
@@ -41,24 +43,17 @@
 
     <script>
         $(document).ready(function () {
-            $('#login').click(function() {
+            $('#loginbtn').click(function() {
                 $.post('/apis/v1/users/login/', {
                     'username': $('#username').val(),
-                    'password': $('password').val(),
+                    'password': $('#password').val(),
                 }, function() {
-                    location.reload();
+                    alert('로그이인 성공!');
+                    location.reload(); 
+                    // 새로고침
                 }).fail(function(data) {
                     alert(data.responseJSON.message);
                 });
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#logout').click(function() {
-                $.get('/apis/v1/users/logout/', {}, function() {
-                    location.reload();
-                })
             });
         });
     </script>
