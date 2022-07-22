@@ -2,3 +2,6 @@ db.sqlite3
 apis/__pycache__
 apis/migrations/__pycache__
 fastgram/__pycache__/wsgi.cpython-310.pyc
+media/
+contents/migrations/
+contents/__pycache__/
