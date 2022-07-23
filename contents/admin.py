@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Image, Content
+from .models import Image, Content, FollowRelation
 
 
 class ImageInline(admin.TabularInline):
@@ -16,3 +16,8 @@ class ContentAdmin(admin.ModelAdmin):
     inlines = [ImageInline] # 동일한 페이지에서 image모델과 content모델 둘다 볼 수 있다.
 
 admin.site.register(Content, ContentAdmin)
+
+class FollowRelationAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(FollowRelation,FollowRelationAdmin)

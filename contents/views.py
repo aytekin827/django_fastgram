@@ -4,7 +4,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
 
-from .models import Image, Content
+from .models import Image, Content, FollowRelation
 
 class HomeView(TemplateView):
     @method_decorator(login_required)
@@ -17,9 +17,11 @@ class HomeView(TemplateView):
         context = super(HomeView, self).get_context_data(**kwargs)
 
         user = self.request.user
-        # followees = 
-        # lookup_user_ids = [user.id] + list(followees)
-        # user와 imageset을 조인하는 
-        context['contents'] = Content.objects.select_related('user').prefetch_related('image_set')
-
+        followees = FollowRelation.objects.filter(follower=user).values_list('followee__id', flat=True)
+        lookup_user_ids = [user.id] + list(followees)
+        # select_relate, prefetch_relate는 쿼리최적화에 관련된 내용
+        context['contents'] = Content.objects.select_related('user').prefetch_related('image_set').filter(
+            user__id__in = lookup_user_ids
+        )
+        print(lookup_user_ids)
         return context

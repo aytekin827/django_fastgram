@@ -1,4 +1,5 @@
 import os
+from pyexpat import model
 import uuid
 
 from django.db import models
@@ -20,6 +21,9 @@ class Content(BaseModel):
     def __str__(self):
         return  self.text + 'created by_' + self.user.username
 
+    class Meta:
+        ordering = ['created_at']
+
 def image_upload_to(instance, filename):
     ext = filename.split('.')[-1]
     return os.path.join(instance.UPLOAD_PATH, "%s.%s" % (uuid.uuid4(), ext))
@@ -36,4 +40,9 @@ class Image(BaseModel):
         unique_together = ['content','order']
         ordering = ['order']
         # ordering = ['-order'] 이렇게 -를 주면 내림차순이 된다.
+
+    
+class FollowRelation(BaseModel):
+    follower = models.OneToOneField(User, related_name='follower', on_delete=models.CASCADE)
+    followee = models.ManyToManyField(User, related_name='followee')
 
