@@ -13,6 +13,25 @@
     <button type="submit" id="login">login</button>
     <button type="submit" id="logout">logout</button>
 
+    <hr>
+    <div class="post">
+        <div class="user-block">
+            {% for content in contents %}
+            {% for image in content.image_set.all %}
+            <img class="img-circle img-bordered-sm" src="{{ image.image.url }}" alt="User Image">
+            {% endfor %}
+            <span class="username">
+                <a href="#">{{ content.user.username }}</a>
+                <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
+            </span>
+            <span class="description">Posted 5 Photos - 5 days ago</span>
+            <p>{{ content.text }}</p>
+        </div>
+        {% endfor %}
+    </div>
+
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
     </script>
 
@@ -39,4 +58,7 @@
             });
         });
     </script>
+
+
+
 {% endblock %}

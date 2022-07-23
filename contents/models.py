@@ -29,9 +29,11 @@ class Image(BaseModel):
     UPLOAD_PATH = 'user-upload'
 
     content = models.ForeignKey(Content, on_delete=models.CASCADE)
-    iamge = models.ImageField(upload_to=image_upload_to)
+    image = models.ImageField(upload_to=image_upload_to)
     order = models.SmallIntegerField() #image numbering
 
     class Meta:
+        unique_together = ['content','order']
         ordering = ['order']
+        # ordering = ['-order'] 이렇게 -를 주면 내림차순이 된다.
 
