@@ -17,8 +17,9 @@
     <button type="submit" id="logout">logout</button>
 
     <br>
+    <br>
     <div class="formContainer">
-        <form action="{% url 'apis_v1_user_create' %}" class="dropzone" id="uploader" style="background-color: whitesmoke;">
+        <form action="{% url 'apis_v1_content_create' %}" class="dropzone" id="uploader" style="background-color: whitesmoke;">
             <div class="dz-message" data-dz-message><span>드래그 드랍하거나 클릭하여 이미지 선택</span></div>
             <div class="fallback">
                 <input name="file" type="file"/>

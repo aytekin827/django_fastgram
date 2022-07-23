@@ -7,6 +7,10 @@ from django.db import IntegrityError
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+
+from contents.models import Content, Image, FollowRelation
+
 
 
 class BaseView(View):
@@ -17,9 +21,6 @@ class BaseView(View):
             'data': data,
             'message': message,
         }
-        res = JsonResponse(data=result, status=status)
-        print(res)
-        print(1)
         return JsonResponse(data=result, status=status)
 
 
@@ -78,3 +79,12 @@ class UserLogoutView(BaseView):
     def get(self, request):
         logout(request)
         return self.response()
+
+
+class ContentCreateView(BaseView):
+    def post(self, request):
+        text = request.POST.get('text','').strip()
+        content = Content.objects.create(user=request.user, text=text)
+        for idx, file in enumerate(request.FILES.values()):
+            Image.objects.create(content=content, image=file, order=idx)
+        return self.response({})
