@@ -23,5 +23,5 @@ class HomeView(TemplateView):
         context['contents'] = Content.objects.select_related('user').prefetch_related('image_set').filter(
             user__id__in = lookup_user_ids
         )
-        print(lookup_user_ids)
+        # print(lookup_user_ids)
         return context

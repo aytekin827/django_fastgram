@@ -6,19 +6,29 @@
 {% endblock %}
 
 {% block header %}
+{% load static %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/basic.css" integrity="sha512-+Vla3mZvC+lQdBu1SKhXLCbzoNCl0hQ8GtCK8+4gOJS/PN9TTn0AO6SxlpX8p+5Zoumf1vXFyMlhpQtVD5+eSw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 
 {% endblock %}
 
 {% block contents %}
-<h1> fastgram homepage </h1>
-{{ request.user }}
-
-    <button type="submit" id="logout">logout</button>
-
+<nav class="fast-nav navbar navbar-expand-lg navbar-light bg-white">
+    <a class="navbar-brand text-danger col-sm-8" href="{% url 'contents_home' %}"><b>Fastgram</b></a>
+    <div class="collapse navbar-collapse col-sm-4" id="navbarText">
+        <span class="navbar-text col-sm-3">
+            {{ request.user }}
+        </span>
+        <span class="navbar-text col-sm-3">
+            <a href="#">친구목록</a>
+        </span>
+        <span class="navbar-text col-sm-3">
+            <a href="javascript:void(0);" id="logout">로그아웃</a>
+        </span>
+    </div>
+</nav>
     <br>
-    <br>
-    <div class="formContainer">
+    <div id="formContainer">
         <form action="{% url 'apis_v1_content_create' %}" class="dropzone" id="uploader" style="background-color: whitesmoke;">
             <div class="dz-message" data-dz-message><span>드래그 드랍하거나 클릭하여 이미지 선택</span></div>
             <div class="fallback">
@@ -31,48 +41,61 @@
         </div>
 
         <div style="text-align: right;">
-        <button type="button" class="btn btn-danger" id="upload">작성하기</button>
+            <button type="button" class="btn btn-danger" id="upload">작성하기</button>
         </div>
     </div>
     {% for content in contents %}
+    <br>
     <div class="content">
         <div class="post">
             {% for image in content.image_set.all %}
             <div class="user-block">
-                <h5 class="text-info" style="text-align: left;">id: {{ content.user.username }}</h5>
+                <h5 class="text-info left-things">id: {{ content.user.username }}</h5>
                 <img class="img-info img-circle img-bordered-sm" src="{{ image.image.url }}" alt="User Image">    
             </div>
             {% endfor %}
-            <span class="username" style="text-align:left">
-                <a href="#">created_by {{ content.user.username }}</a>
+            <span class="username left-things">
+                created_by <a href="#">{{ content.user.username }}</a>
                 <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
             </span>
             <span class="description">Posted {{ content.image_set.count }} Photos - {{ content.created_at }} </span>
             <p>{{ content.text }}</p>
         </div>
     </div>
-    <hr>
     {% endfor %}
 
+    <script>
+        Dropzone.autoDiscover = false;
 
+        var dropZoneUploader = new Dropzone('form#uploader', {
+            init: function() {
+                var dropzone = this;
+
+                $('#upload').click(function () {
+                    dropZoneUploader.processQueue();
+                });
+
+                dropzone.on("sending", function(file, xhr, formData){
+                    formData.append("text", $('#text').val())
+                });
+            },
+            parallelUploads: 10,
+            autoProcessQueue: false,
+            type: 'POST',
+            success: function() {
+                location.reload();
+            },
+            error: function(e) {
+                console.log(e)
+                alert('에러가 발생했습니다. 다시 시도해주세요.');
+            },
+            acceptedFiles: ".jpeg,.jpg,.png,.gif",
+            uploadMultiple: true,
+        });
+    </script>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
-    </script>
-
-    <script>
-        $(document).ready(function () {
-            $('#login').click(function() {
-                $.post('/apis/v1/users/login/', {
-                    'username': $('#username').val(),
-                    'password': $('password').val(),
-                }, function() {
-                    location.reload();
-                }).fail(function(data) {
-                    alert(data.responseJSON.message);
-                });
-            });
-        });
     </script>
     <script>
         $(document).ready(function () {
