@@ -5,30 +5,54 @@
 홈페이지
 {% endblock %}
 
+{% block header %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/basic.css" integrity="sha512-+Vla3mZvC+lQdBu1SKhXLCbzoNCl0hQ8GtCK8+4gOJS/PN9TTn0AO6SxlpX8p+5Zoumf1vXFyMlhpQtVD5+eSw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+{% endblock %}
+
 {% block contents %}
-<h1> homepage </h1>
+<h1> fastgram homepage </h1>
 {{ request.user }}
-    <input type="text", id="username">
-    <input type="password", id="password">
-    <button type="submit" id="login">login</button>
+
     <button type="submit" id="logout">logout</button>
 
-    <hr>
-    <div class="post">
-        <div class="user-block">
-            {% for content in contents %}
+    <br>
+    <div class="formContainer">
+        <form action="{% url 'apis_v1_user_create' %}" class="dropzone" id="uploader" style="background-color: whitesmoke;">
+            <div class="dz-message" data-dz-message><span>드래그 드랍하거나 클릭하여 이미지 선택</span></div>
+            <div class="fallback">
+                <input name="file" type="file"/>
+            </div>
+        </form>
+        <div class="form-group">
+            <label> 아래에 글을 입력해주세요.</label>
+            <textarea class="form-control rounded-0" id="text" rows="3"></textarea>
+        </div>
+
+        <div style="text-align: right;">
+        <button type="button" class="btn btn-danger" id="upload">작성하기</button>
+        </div>
+    </div>
+    {% for content in contents %}
+    <div class="content">
+        <div class="post">
             {% for image in content.image_set.all %}
-            <img class="img-circle img-bordered-sm" src="{{ image.image.url }}" alt="User Image">
+            <div class="user-block">
+                <h5 class="text-info" style="text-align: left;">id: {{ content.user.username }}</h5>
+                <img class="img-info img-circle img-bordered-sm" src="{{ image.image.url }}" alt="User Image">    
+            </div>
             {% endfor %}
-            <span class="username">
-                <a href="#">{{ content.user.username }}</a>
+            <span class="username" style="text-align:left">
+                <a href="#">created_by {{ content.user.username }}</a>
                 <a href="#" class="pull-right btn-box-tool"><i class="fa fa-times"></i></a>
             </span>
-            <span class="description">Posted 5 Photos - 5 days ago</span>
+            <span class="description">Posted {{ content.image_set.count }} Photos - {{ content.created_at }} </span>
             <p>{{ content.text }}</p>
         </div>
-        {% endfor %}
     </div>
+    <hr>
+    {% endfor %}
+
 
 
 
@@ -58,7 +82,7 @@
             });
         });
     </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js" integrity="sha512-U2WE1ktpMTuRBPoCFDzomoIorbOyUv0sP8B+INA3EzNAhehbzED1rOJg6bCqPf/Tuposxb5ja/MAUnC8THSbLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
 {% endblock %}
