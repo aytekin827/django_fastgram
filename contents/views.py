@@ -25,3 +25,21 @@ class HomeView(TemplateView):
         )
         # print(lookup_user_ids)
         return context
+
+
+class RelationView(TemplateView):
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    template_name = 'relation.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        user = self.request.user 
+     
+        follower = FollowRelation.objects.get(follower=user.id)
+        context['followers'] = follower.followee.values_list('username',flat=True)
+        print(context['followers'])
+        return context

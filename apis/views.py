@@ -1,3 +1,4 @@
+from os import stat
 from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -87,4 +88,62 @@ class ContentCreateView(BaseView):
         content = Content.objects.create(user=request.user, text=text)
         for idx, file in enumerate(request.FILES.values()):
             Image.objects.create(content=content, image=file, order=idx)
+        return self.response({})
+
+
+class RelationCreateView(BaseView):
+    @method_decorator(csrf_exempt) 
+    # ajax로 post요청을 보낼때 csrf 보안 절차를 건너뛰기 위한 데코레이터
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        try:
+            user_id = request.POST.get('id','')
+        except ValueError:
+            return self.response(message='잘못된 요청입니다.', status=400)
+
+        try:
+            relation = FollowRelation.objects.get(follower=request.user)
+        except FollowRelation.DoesNotExist:
+            relation = FollowRelation.objects.create(follower=request.user)
+
+        try:
+            if user_id == request.user.id:
+                #자기 자신은 팔로우 안되게끔
+                raise IntegrityError
+            relation.followee.add(user_id)
+            relation.save()
+        except IntegrityError:
+            return self.response(message='잘못된 요청입니다.', status=400)
+        
+        return self.response({})
+
+
+class RelationDeleteView(BaseView):
+    @method_decorator(csrf_exempt) 
+    # ajax로 post요청을 보낼때 csrf 보안 절차를 건너뛰기 위한 데코레이터
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        try:
+            user_id = request.POST.get('id','')
+        except ValueError:
+            return self.response(message='잘못된 요청입니다.', status=400)
+
+        try:
+            relation = FollowRelation.objects.get(follower=request.user)
+        except FollowRelation.DoesNotExist:
+            return self.response(message='잘못된 요청입니다.', status=400)
+
+        try:
+            if user_id == request.user.id:
+                #자기 자신은 언팔로우 안되게끔
+                raise IntegrityError
+            relation.followee.remove(user_id)
+            relation.save()
+        except IntegrityError:
+            return self.response(message='잘못된 요청입니다.', status=400)
+        
         return self.response({})

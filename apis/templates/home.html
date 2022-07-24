@@ -1,5 +1,4 @@
 {% extends "_base.html" %}
-{% load static %}
 
 {% block title %}
 홈페이지
@@ -13,21 +12,8 @@
 {% endblock %}
 
 {% block contents %}
-<nav class="fast-nav navbar navbar-expand-lg navbar-light bg-white">
-    <a class="navbar-brand text-danger col-sm-8" href="{% url 'contents_home' %}"><b>Fastgram</b></a>
-    <div class="collapse navbar-collapse col-sm-4" id="navbarText">
-        <span class="navbar-text col-sm-3">
-            {{ request.user }}
-        </span>
-        <span class="navbar-text col-sm-3">
-            <a href="#">친구목록</a>
-        </span>
-        <span class="navbar-text col-sm-3">
-            <a href="javascript:void(0);" id="logout">로그아웃</a>
-        </span>
-    </div>
-</nav>
-    <br>
+{% include "header.html" %}
+<br>
     <div id="formContainer">
         <form action="{% url 'apis_v1_content_create' %}" class="dropzone" id="uploader" style="background-color: whitesmoke;">
             <div class="dz-message" data-dz-message><span>드래그 드랍하거나 클릭하여 이미지 선택</span></div>

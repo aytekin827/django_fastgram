@@ -1,0 +1,41 @@
+{% include "header.html" %}
+
+{% block header %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock %}
+
+{% block contents %}
+로그인 된 아이디: {{ request.user }}
+<button type="button" id="logout">Logout</button>
+
+<p>사용자 찾기</p>
+<input type="text" id="searchUserName" placeholder="아이디를 입력해주세요.">
+<button id="search">검색</button>
+<p><b id="searchResult"></b><span id="searchFollow" style="display: none;"> - <button></button></span></p>
+<hr>
+
+{% if followers %}
+<h2>날 팔로우 한 사람들</h2>
+<ul class="list-group">
+    {% for followee in followers %}
+    <li class="list-group-item list-group-item-info col-md-4">{{ followee }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
+</script>
+<script>
+    $(document).ready(function () {
+        $('#logout').click(function() {
+            $.get('/apis/v1/users/logout/', {}, function() {
+                location.reload();
+            })
+        });
+    });
+</script>
+
+
+{% endblock %}
