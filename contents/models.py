@@ -46,3 +46,5 @@ class FollowRelation(BaseModel):
     follower = models.OneToOneField(User, related_name='follower', on_delete=models.CASCADE)
     followee = models.ManyToManyField(User, related_name='followee')
 
+    def __str__(self):
+        return self.follower.username

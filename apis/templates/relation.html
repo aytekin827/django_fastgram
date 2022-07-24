@@ -7,7 +7,7 @@
 
 {% block contents %}
 로그인 된 아이디: {{ request.user }}
-<button type="button" id="logout">Logout</button>
+<button type="button" id="logout1">Logout</button>
 
 <p>사용자 찾기</p>
 <input type="text" id="searchUserName" placeholder="아이디를 입력해주세요.">
@@ -15,11 +15,21 @@
 <p><b id="searchResult"></b><span id="searchFollow" style="display: none;"> - <button></button></span></p>
 <hr>
 
+{% if followees %}
+<h2>내가 팔로우 한 사람들(followee)</h2>
+<ul class="list-group">
+    {% for followee in followees %}
+    <li class="list-group-item list-group-item-info col-md-4">{{ followee }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<hr>
+<h2>날 팔로우 한 사람들(follower)</h2>
 {% if followers %}
-<h2>날 팔로우 한 사람들</h2>
 <ul class="list-group">
     {% for followee in followers %}
-    <li class="list-group-item list-group-item-info col-md-4">{{ followee }}</li>
+    <li class="list-group-item list-group-item-info col-md-4">{{ followee }} - <button class="unfollow btn btn-danger" data-user-id="{{ user.id }}">언팔로우</button></li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -29,7 +39,7 @@
 </script>
 <script>
     $(document).ready(function () {
-        $('#logout').click(function() {
+        $('#logout1').click(function() {
             $.get('/apis/v1/users/logout/', {}, function() {
                 location.reload();
             })
