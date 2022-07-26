@@ -27,8 +27,8 @@
 <h2>날 팔로우 한 사람들(follower)</h2>
 {% if followers %}
 <ul class="list-group">
-    {% for followee in followers %}
-    <li class="list-group-item list-group-item-info col-md-4">{{ followee }}</li>
+    {% for follower in followers %}
+    <li class="list-group-item list-group-item-info col-md-4">{{ follower }} - <button class="follow btn btn-success" data-user-id="{{ follower.follower_id }}">팔로우</button></li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -53,8 +53,17 @@
                 alert(data.responseJSON.message);
             });
         });
+        $('body').on('click', '.follow', function (e) {   
+            var userId = $(e.currentTarget).data('userId');
+            $.post("{% url 'apis_v1_relation_create' %}", {id:userId},
+            function(){
+                alert('follow completed!!')
+                location.reload();
+            }).fail(function(data){
+                alert(data.responseJSON.message);
+            });
+        });
     });
-
 </script>
 
 

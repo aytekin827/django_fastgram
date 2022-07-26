@@ -105,13 +105,15 @@ class RelationCreateView(BaseView):
 
         try:
             relation = FollowRelation.objects.get(follower=request.user)
+            print(relation)
         except FollowRelation.DoesNotExist:
             relation = FollowRelation.objects.create(follower=request.user)
 
         try:
-            if user_id == request.user.id:
+            if user_id == str(request.user.id):
                 #자기 자신은 팔로우 안되게끔
                 raise IntegrityError
+            
             relation.followee.add(user_id)
             relation.save()
         except IntegrityError:
