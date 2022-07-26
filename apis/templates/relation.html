@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block contents %}
+<div class="all" style="margin-left: 100px;">
 로그인 된 아이디: {{ request.user }}
 
 <p>사용자 찾기</p>
@@ -32,7 +33,7 @@
     {% endfor %}
 </ul>
 {% endif %}
-
+</div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
 </script>
@@ -41,6 +42,15 @@
         $('#logout').click(function() {
             $.get('/apis/v1/users/logout/', {}, function() {
                 location.reload();
+            })
+        });
+        $('#search').click(function() {
+            var userId = $('#searchUserName').val()
+            console.log(userId)
+            $.post('{% url "apis_v1_user_get" %}', {userId}, function() {
+                location.reload();
+            }).fail(function(data){
+                alert(data.responseJSON.message)
             })
         });
         $('body').on('click', '.unfollow', function (e) {   

@@ -151,3 +151,20 @@ class RelationDeleteView(BaseView):
             return self.response(message='잘못된 요청입니다.', status=400)
         
         return self.response({})
+
+
+class UserGetView(BaseView):
+    @method_decorator(csrf_exempt) 
+    # ajax로 post요청을 보낼때 csrf 보안 절차를 건너뛰기 위한 데코레이터
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def post(self, request):
+        username = request.POST.get('userId','').strip()
+        print(username)
+        try:
+            user = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return self.response(message='사용자를 찾을 수 없습니다.', status=404)
+        print(user)
+        return self.response({'username':user.username, 'email':user.email, 'id':user.id})
