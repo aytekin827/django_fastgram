@@ -127,6 +127,7 @@ class RelationDeleteView(BaseView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
+
         try:
             user_id = request.POST.get('id','')
         except ValueError:
@@ -134,11 +135,12 @@ class RelationDeleteView(BaseView):
 
         try:
             relation = FollowRelation.objects.get(follower=request.user)
+
         except FollowRelation.DoesNotExist:
             return self.response(message='잘못된 요청입니다.', status=400)
 
         try:
-            if user_id == request.user.id:
+            if user_id == str(request.user.id):
                 #자기 자신은 언팔로우 안되게끔
                 raise IntegrityError
             relation.followee.remove(user_id)

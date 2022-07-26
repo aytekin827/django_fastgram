@@ -43,6 +43,7 @@ INSTALLED_APPS += [
     'debug_toolbar',
     'apis',
     'contents',
+    'django_extensions',
 ]
 
 MIDDLEWARE = [
