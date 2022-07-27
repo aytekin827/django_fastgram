@@ -51,6 +51,9 @@ class UserCreateView(BaseView):
             user = User.objects.create_user(username=username, password=password, email=email)
         except IntegrityError:
             return self.response(message='이미 존재하는 아이디입니다.', status=400)
+        print(user)
+        FollowRelation.objects.create(follower=user)
+
         return self.response({'user.id':user.id})
 
 
@@ -160,11 +163,9 @@ class UserGetView(BaseView):
         return super().dispatch(request, *args, **kwargs)
 
     def post(self, request):
-        username = request.POST.get('userId','').strip()
-        print(username)
+        username = request.POST.get('username','').strip()
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
             return self.response(message='사용자를 찾을 수 없습니다.', status=404)
-        print(user)
         return self.response({'username':user.username, 'email':user.email, 'id':user.id})

@@ -11,15 +11,15 @@
 
 <p>사용자 찾기</p>
 <input type="text" id="searchUserName" placeholder="아이디를 입력해주세요.">
-<button id="search">검색</button>
-<p><b id="searchResult"></b><span id="searchFollow" style="display: none;"> - <button></button></span></p>
+<button id="search" class="btn btn-outline-danger">검색</button>
+<p><b id="searchResult"></b><span id="searchFollow" style="display: none;"> - <button class="btn btn-primary btn-outline-info"></button></span></p>
 <hr>
 
 {% if followees %}
 <h2>내가 팔로우 한 사람들(followee)</h2>
 <ul class="list-group">
     {% for followee in followees %}
-    <li class="list-group-item list-group-item-info col-md-4">{{ followee }} - <button class="unfollow btn btn-danger" data-user-id="{{ followee.id }}">언팔로우</button></li>
+    <li class="list-group-item list-group-item col-md-4">{{ followee }} - <button class="unfollow btn btn-outline-danger" data-user-id="{{ followee.id }}">언팔로우</button></li>
     {% endfor %}
 </ul>
 {% endif %}
@@ -29,12 +29,11 @@
 {% if followers %}
 <ul class="list-group">
     {% for follower in followers %}
-    <li class="list-group-item list-group-item-info col-md-4">{{ follower }} - <button class="follow btn btn-success" data-user-id="{{ follower.follower_id }}">팔로우</button></li>
+    <li class="list-group-item list-group-item col-md-4">{{ follower }} - <button class="follow btn btn-outline-success" data-user-id="{{ follower.follower_id }}">팔로우</button></li>
     {% endfor %}
 </ul>
 {% endif %}
 </div>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
 </script>
 <script>
@@ -44,15 +43,32 @@
                 location.reload();
             })
         });
+        var followeesIds = '{{ followees_ids }}';
         $('#search').click(function() {
-            var userId = $('#searchUserName').val()
-            console.log(userId)
-            $.post('{% url "apis_v1_user_get" %}', {userId}, function() {
-                location.reload();
+            var username = $('#searchUserName').val();
+            console.log(username)
+            $.post('{% url "apis_v1_user_get" %}', {username}, function(obj) {
+                $('#searchResult').html(obj.data.username);
+                console.log(obj.data)
+
+            var $searchRelationButton = $('#searchFollow button');
+            $searchRelationButton.data('user-id', obj.data.id);
+            if (followeesIds.indexOf(obj.data.id) > -1) {
+                $searchRelationButton.removeClass('follow');
+                $searchRelationButton.addClass('unfollow');
+                $searchRelationButton.html('언팔로우');
+            } else {
+                $searchRelationButton.removeClass('unfollow');
+                $searchRelationButton.addClass('follow');
+                $searchRelationButton.html('팔로우');
+            }
+
+            $('#searchFollow').show();
             }).fail(function(data){
-                alert(data.responseJSON.message)
+                $('#searchResult').html(data.responseJSON.message)
             })
         });
+
         $('body').on('click', '.unfollow', function (e) {   
             var userId = $(e.currentTarget).data('userId');
             $.post("{% url 'apis_v1_relation_delete' %}", {id:userId},

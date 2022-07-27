@@ -38,11 +38,11 @@ class RelationView(TemplateView):
         context = super().get_context_data(**kwargs)
         
         user = self.request.user 
-     
+        print(user)
         # 내가 팔로우하는 사람들
         followee = FollowRelation.objects.get(follower=user)
         context['followees'] = followee.followee.all()
-
+        context['followees_ids'] = followee.followee.all().values_list('id',flat=True)
         # 날 팔로우하는 사람들
         followers = FollowRelation.objects.all().filter(followee__username__in = [user])
         context['followers'] = followers
