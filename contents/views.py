@@ -38,7 +38,6 @@ class RelationView(TemplateView):
         context = super().get_context_data(**kwargs)
         
         user = self.request.user 
-        print(user)
         # 내가 팔로우하는 사람들
         followee = FollowRelation.objects.get(follower=user)
         context['followees'] = followee.followee.all()

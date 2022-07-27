@@ -86,9 +86,17 @@ class UserLogoutView(BaseView):
 
 
 class ContentCreateView(BaseView):
+    @method_decorator(csrf_exempt) 
+    # ajax로 post요청을 보낼때 csrf 보안 절차를 건너뛰기 위한 데코레이터
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
     def post(self, request):
+        print(1)
         text = request.POST.get('text','').strip()
+        print(text)
         content = Content.objects.create(user=request.user, text=text)
+        print(content)
         for idx, file in enumerate(request.FILES.values()):
             Image.objects.create(content=content, image=file, order=idx)
         return self.response({})
@@ -108,7 +116,6 @@ class RelationCreateView(BaseView):
 
         try:
             relation = FollowRelation.objects.get(follower=request.user)
-            print(relation)
         except FollowRelation.DoesNotExist:
             relation = FollowRelation.objects.create(follower=request.user)
 

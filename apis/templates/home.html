@@ -6,9 +6,12 @@
 
 {% block header %}
 {% load static %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/basic.css" integrity="sha512-+Vla3mZvC+lQdBu1SKhXLCbzoNCl0hQ8GtCK8+4gOJS/PN9TTn0AO6SxlpX8p+5Zoumf1vXFyMlhpQtVD5+eSw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
+</script>
 {% endblock %}
 
 {% block contents %}
@@ -21,22 +24,21 @@
                 <input name="file" type="file"/>
             </div>
         </form>
-        <div class="form-group">
-            <label> 아래에 글을 입력해주세요.</label>
-            <textarea class="form-control rounded-0" id="text" rows="3"></textarea>
-        </div>
-
-        <div style="text-align: right;">
-            <button type="button" class="btn btn-danger" id="upload">작성하기</button>
-        </div>
+            <div class="form-group">
+                <label> 아래에 글을 입력해주세요.</label>
+                <textarea class="form-control rounded-0" id="text" rows="3" name="text"></textarea>
+            </div>
+            <div style="text-align: right;">
+                <button type="submit" class="btn btn-danger" id="upload">작성하기</button>
+            </div>
     </div>
     {% for content in contents %}
     <br>
     <div class="content">
         <div class="post">
+            <h5 class="text-info left-things" style="text-align:center">{{ content.user.username }}</h5>
             {% for image in content.image_set.all %}
             <div class="user-block">
-                <h5 class="text-info left-things">id: {{ content.user.username }}</h5>
                 <img class="img-info img-circle img-bordered-sm" src="{{ image.image.url }}" alt="User Image">    
             </div>
             {% endfor %}
@@ -50,6 +52,16 @@
     </div>
     {% endfor %}
 
+
+    <script>
+        $(document).ready(function () {
+            $('#logout').click(function() {
+                $.get('/apis/v1/users/logout/', {}, function() {
+                    location.reload();
+                })
+            });
+        });
+    </script>
     <script>
         Dropzone.autoDiscover = false;
 
@@ -79,20 +91,5 @@
             uploadMultiple: true,
         });
     </script>
-
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous">  
-    </script>
-    <script>
-        $(document).ready(function () {
-            $('#logout').click(function() {
-                $.get('/apis/v1/users/logout/', {}, function() {
-                    location.reload();
-                })
-            });
-        });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js" integrity="sha512-U2WE1ktpMTuRBPoCFDzomoIorbOyUv0sP8B+INA3EzNAhehbzED1rOJg6bCqPf/Tuposxb5ja/MAUnC8THSbLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
 
 {% endblock %}
