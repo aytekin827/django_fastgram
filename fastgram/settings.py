@@ -44,6 +44,7 @@ INSTALLED_APPS += [
     'apis',
     'contents',
     'django_extensions',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +123,15 @@ TIME_ZONE = 'Asia/Seoul'
 USE_I18N = True
 
 USE_TZ = True
+
+AWS_ACCESS_KEY_ID = 'AKIA3S4L6XSLKVCBQJ4B'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_DEFAULT_ACL = None
+AWS_REGION = 'ap-northeast-2'
+AWS_STORAGE_BUCKET_NAME = 'fastgram-aytekin'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME, AWS_REGION)
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 
 # Static files (CSS, JavaScript, Images)
