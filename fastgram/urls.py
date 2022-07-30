@@ -11,7 +11,7 @@ from contents.views import HomeView, RelationView
 class NonUserTemplateView(TemplateView):
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_anonymous:
-            print('로그인이 되어 홈페이지로 이동합니다')
+            print(request.user, ': 로그인이 되어 홈페이지로 이동합니다')
             return redirect('contents_home')
         return super().dispatch(request, *args, **kwargs)
 

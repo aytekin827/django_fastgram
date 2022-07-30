@@ -10,3 +10,5 @@ DATABASES = {
         'NAME': BASE_DIR / 'db_prod.sqlite3'
     }
 }
+
+DEBUG = False
